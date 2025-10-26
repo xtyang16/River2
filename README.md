@@ -88,19 +88,10 @@ By utilizing a robust map-free estimation approach, River2 extends both the init
 
 ### 3. Citation
 
-If you use our paper for any academic work, please cite our paper.
+If you use our paper for any academic work, please cite this paper.
 
 ```
-@article{chen2024river,
-  title={River: A tightly-coupled radar-inertial velocity estimator based on continuous-time optimization},
-  author={Chen, Shuolong and Li, Xingxing and Li, Shengyu and Zhou, Yuxuan and Wang, Shiwen},
-  journal={IEEE Robotics and Automation Letters},
-  volume={9},
-  number={7},
-  pages={6107--6114},
-  year={2024},
-  publisher={IEEE}
-}
+
 ```
 
 ### 4. Contact
