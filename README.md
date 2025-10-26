@@ -80,8 +80,9 @@ By utilizing a robust map-free estimation approach, River2 extends both the init
 
 ### 2.4 Launch River2
 
-**Attention**: to create a virtual reality (**VR**) perspective of the IMU (left window view in runtime), you have to change the model file path in configure field (`Preference::ObjFileForDispla`y) to `{root path}/river2/model/river.obj`. For a better VR perspective, you can design your own simulation scenario using `Blender` and export it as an `obj` file, then pass it to the configure file.
++ **Attention**: to create a virtual reality (**VR**) perspective of the IMU (left window view in runtime), you have to change the model file path in configure field (`Preference::ObjFileForDispla`y) to `{root path}/river2/model/river.obj`. For a better VR perspective, you can design your own simulation scenario using `Blender` and export it as an `obj` file, then pass it to the configure file.
 
++ run the roslaunch command:
   ```sh
   roslaunch river2 river2-simu-multi.launch
   ```
