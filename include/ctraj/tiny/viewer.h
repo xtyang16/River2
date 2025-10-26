@@ -1,0 +1,132 @@
+//
+// Created by csl on 10/22/22.
+//
+
+#ifndef TINY_VIEWER_VIEWER_H
+#define TINY_VIEWER_VIEWER_H
+
+#include "iostream"
+#include "memory"
+#include "mutex"
+#include "pangolin/gl/opengl_render_state.h"
+#include "thread"
+#include "arrow.h"
+#include "cone.h"
+#include "coordinate.h"
+#include "cube.h"
+#include "cylinder.h"
+#include "line.h"
+#include "point_cloud.hpp"
+#include "polygon.h"
+#include "path.h"
+#include "camera.h"
+#include "imu.h"
+#include "lidar.h"
+#include "plane.h"
+#include "surfel.h"
+#include "aligned_cloud.hpp"
+#include "radar.h"
+#include "landmark.h"
+#include "viewer_configor.h"
+#include "utility"
+#include <pangolin/geometry/glgeometry.h>
+
+namespace ns_viewer {
+
+#define LOCKER_VIEWER std::unique_lock<std::mutex> viewerLock(Viewer::MUTEX);
+
+    class Viewer {
+    public:
+        using Ptr = std::shared_ptr<Viewer>;
+
+    protected:
+        ViewerConfigor _configor;
+        std::shared_ptr<std::thread> _thread;
+
+    public:
+        static std::mutex MUTEX;
+
+    protected:
+        std::unordered_map<std::size_t, Entity::Ptr> _entities;
+        pangolin::OpenGlRenderState _camView;
+        bool _isActive;
+        pangolin::Viewport _viewport;
+
+        std::unordered_map<std::size_t, pangolin::Geometry> _geometry;
+    public:
+
+        explicit Viewer(ViewerConfigor configor = ViewerConfigor());
+
+        explicit Viewer(const std::string &configPath);
+
+        static Ptr Create(const ViewerConfigor &configor = ViewerConfigor());
+
+        static Ptr Create(const std::string &configPath);
+
+        // used for load viewer from file
+        explicit Viewer(char) : _thread(nullptr), _isActive(false) {}
+
+        virtual ~Viewer();
+
+        void RunInSingleThread();
+
+        void RunInMultiThread();
+
+        std::size_t AddEntity(const Entity::Ptr &entity);
+
+        std::size_t AddObjEntity(const std::string &filename);
+
+        void RemoveObjEntity(std::size_t id);
+
+        std::vector<std::size_t> AddEntity(const std::vector<Entity::Ptr> &entities);
+
+        bool RemoveEntity(std::size_t id);
+
+        bool RemoveEntity(const std::vector<std::size_t> &ids);
+
+        bool RemoveEntity();
+
+        void SetCamView(const pangolin::OpenGlRenderState &camView);
+
+        void SetCamView(const std::string &filename);
+
+        void SetCamView(Posef T_CamToWorld);
+
+        void Save(const std::string &filename, bool binaryMode = true) const;
+
+        static Ptr Load(const std::string &filename, bool binaryMode = true);
+
+        ViewerConfigor &GetConfigor();
+
+        bool IsActive() const;
+
+        const pangolin::Viewport &GetViewport() const;
+
+    protected:
+
+        void InitViewer(bool initCamViewFromConfigor);
+
+        void Run();
+
+        void SaveScreenShotCallBack() const;
+
+        void SaveCameraCallBack() const;
+
+        void SaveViewerCallBack() const;
+
+        void VideoRecordCallBack() const;
+
+    public:
+
+        template<class Archive>
+        void serialize(Archive &archive) {
+            archive(
+                    cereal::make_nvp("configor", _configor),
+                    cereal::make_nvp("entities", _entities),
+                    cereal::make_nvp("camera_view", _camView)
+            );
+        }
+    };
+}
+
+#endif //TINY_VIEWER_VIEWER_H

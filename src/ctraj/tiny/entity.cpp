@@ -1,0 +1,27 @@
+//
+// Created by csl on 5/8/23.
+//
+
+#include "ctraj/tiny/entity.h"
+
+namespace ns_viewer {
+
+    ColourWheel Entity::COLOR_WHEEL = ColourWheel(1.0f);
+    std::size_t Entity::counter = 0;
+
+    Entity::Entity() : id(GenUniqueName()) {}
+
+    Entity::~Entity() = default;
+
+    std::size_t Entity::GenUniqueName() {
+        return counter++;
+    }
+
+    Colour Entity::GetUniqueColour() {
+        return COLOR_WHEEL.GetUniqueColour();
+    }
+
+    const std::size_t &Entity::GetId() const {
+        return id;
+    }
+}
